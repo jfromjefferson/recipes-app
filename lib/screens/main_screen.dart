@@ -3,10 +3,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:recipes/controllers/app_controller.dart';
 import 'package:recipes/database/queries/category/queries.dart';
+import 'package:recipes/database/queries/recipe/queries.dart';
 import 'package:recipes/utils/colors.dart';
 import 'package:recipes/utils/functions.dart';
 import 'package:recipes/widgets/customText.dart';
 import 'package:recipes/widgets/customTextField.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class MainScreen extends StatelessWidget {
   final AppController appController = Get.put(AppController());
@@ -18,7 +20,7 @@ class MainScreen extends StatelessWidget {
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: (){
-            getCategoryList().then((value) {
+            getRecipeList().then((value) {
               print(value);
             });
             Get.focusScope?.unfocus();
@@ -54,9 +56,10 @@ class MainScreen extends StatelessWidget {
                         future: categoryCardList(),
                         builder: (BuildContext context, AsyncSnapshot snapshot){
                           if(snapshot.hasData){
-                            return Wrap(
-                              runSpacing: 5,
-                              alignment: WrapAlignment.spaceEvenly,
+                            return StaggeredGrid.count(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
                               children: snapshot.data,
                             );
                           }else {
@@ -73,35 +76,20 @@ class MainScreen extends StatelessWidget {
                         color: textColor,
                       ),
                       SizedBox(height: 10),
-                      Wrap(
-                        runSpacing: 5,
-                        alignment: WrapAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                              width: Get.mediaQuery.size.width/2.2,
-                              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                              decoration: BoxDecoration(
-                                color: Color(0xffb8eeb2),
-                                borderRadius: BorderRadius.circular(5),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.4),
-                                    spreadRadius: 1,
-                                    blurRadius: 3,
-                                    offset: Offset(0, 3),
-                                  )
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CustomText(text: 'Bolo de cenoura', size: 18, align: TextAlign.center),
-                                  SizedBox(height: 10),
-                                  CustomText(text: '2300 pessoas gostaram disso', align: TextAlign.center),
-                                ],
-                              )
-                          ),
-                        ],
+                      FutureBuilder(
+                        future: recipeCardList(),
+                        builder: (BuildContext context, AsyncSnapshot snapshot){
+                          if(snapshot.hasData){
+                            return StaggeredGrid.count(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              children: snapshot.data,
+                            );
+                          }else {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                        },
                       ),
                       SizedBox(height: 10),
                     ],

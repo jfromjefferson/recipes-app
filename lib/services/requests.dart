@@ -1,7 +1,13 @@
 import 'package:dio/dio.dart';
 
-Future<Response> fetchData({required String path}) async {
-  Response<dynamic> response = await Dio().get(path);
+Future<Response?> fetchData({required String path}) async {
+  try {
+    Dio dio = new Dio();
+    dio.options.connectTimeout = 5000;
+    Response<dynamic> response = await dio.get(path);
 
-  return response;
+    return response;
+  }catch(e){
+    return null;
+  }
 }

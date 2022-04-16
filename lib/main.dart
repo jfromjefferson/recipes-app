@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:recipes/screens/main_screen.dart';
 import 'package:recipes/utils/colors.dart';
+import 'package:recipes/utils/functions.dart';
 import 'package:recipes/utils/register_adapter.dart';
 
 Future<void> main() async {
@@ -12,6 +13,11 @@ Future<void> main() async {
   await Hive.initFlutter();
   registerAdapter();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  // Cache
+  await createCategoryCache();
+  await createRecipeCache();
+  // Cache
 
   runApp(const MyApp());
 }

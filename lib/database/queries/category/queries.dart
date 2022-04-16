@@ -13,15 +13,23 @@ Future<List<Category>> getCategoryList() async {
   return categoryList;
 }
 
+Future<Category> getOneCategory({required String uuid}) async {
+  final box = await Hive.openBox<Category>('category');
+
+  final categoryFilter = box.values.where((element) => element.uuid == uuid).toList();
+
+  return categoryFilter.first;
+}
+
 Future<void> saveCategory({required Category category}) async {
   final box = await Hive.openBox<Category>('category');
 
   final categoryFilter = box.values.where((element) => element.uuid == category.uuid).toList();
 
   if(categoryFilter.length > 0){
-    int categoryIndex = categoryFilter.first.key;
+    int index = categoryFilter.first.key;
 
-    await box.putAt(categoryIndex, category);
+    await box.putAt(index, category);
   }else {
     await box.add(category);
   }
