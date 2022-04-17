@@ -10,7 +10,12 @@ import 'package:recipes/widgets/customText.dart';
 import 'package:recipes/widgets/customTextField.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
   final AppController appController = Get.put(AppController());
 
   @override
@@ -42,57 +47,64 @@ class MainScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 Expanded(
-                  child: ListView(
-                    children: [
-                      CustomText(
-                        text: 'Categorias adicionadas recentemente',
-                        size: 20,
-                        align: TextAlign.center,
-                        weight: FontWeight.bold,
-                        color: textColor,
-                      ),
-                      SizedBox(height: 10),
-                      FutureBuilder(
-                        future: categoryCardList(),
-                        builder: (BuildContext context, AsyncSnapshot snapshot){
-                          if(snapshot.hasData){
-                            return StaggeredGrid.count(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
-                              children: snapshot.data,
-                            );
-                          }else {
-                            return Center(child: CircularProgressIndicator());
-                          }
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      CustomText(
-                        text: 'Últimas receitas',
-                        size: 20,
-                        align: TextAlign.center,
-                        weight: FontWeight.bold,
-                        color: textColor,
-                      ),
-                      SizedBox(height: 10),
-                      FutureBuilder(
-                        future: recipeCardList(),
-                        builder: (BuildContext context, AsyncSnapshot snapshot){
-                          if(snapshot.hasData){
-                            return StaggeredGrid.count(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
-                              children: snapshot.data,
-                            );
-                          }else {
-                            return Center(child: CircularProgressIndicator());
-                          }
-                        },
-                      ),
-                      SizedBox(height: 10),
-                    ],
+                  child: RefreshIndicator(
+                    onRefresh: (){
+                      return Future.delayed(Duration(seconds: 3)).then((value) {
+                        setState(() {});
+                      });
+                    },
+                    child: ListView(
+                      children: [
+                        CustomText(
+                          text: 'Categorias adicionadas recentemente',
+                          size: 20,
+                          align: TextAlign.center,
+                          weight: FontWeight.bold,
+                          color: textColor,
+                        ),
+                        SizedBox(height: 10),
+                        FutureBuilder(
+                          future: categoryCardList(),
+                          builder: (BuildContext context, AsyncSnapshot snapshot){
+                            if(snapshot.hasData){
+                              return StaggeredGrid.count(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                children: snapshot.data,
+                              );
+                            }else {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        CustomText(
+                          text: 'Últimas receitas',
+                          size: 20,
+                          align: TextAlign.center,
+                          weight: FontWeight.bold,
+                          color: textColor,
+                        ),
+                        SizedBox(height: 10),
+                        FutureBuilder(
+                          future: recipeCardList(),
+                          builder: (BuildContext context, AsyncSnapshot snapshot){
+                            if(snapshot.hasData){
+                              return StaggeredGrid.count(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                                children: snapshot.data,
+                              );
+                            }else {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                          },
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    ),
                   ),
                 ),
               ],
