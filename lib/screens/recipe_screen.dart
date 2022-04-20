@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipes/controllers/app_controller.dart';
 import 'package:recipes/database/models/recipe/recipe.dart';
+import 'package:recipes/database/queries/favorite/queries.dart';
 import 'package:recipes/utils/functions.dart';
 import 'package:recipes/widgets/customText.dart';
 
@@ -15,13 +16,18 @@ class RecipeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    appController.setRecipeFavorite(recipe: recipe);
+
     return Scaffold(
       appBar: AppBar(
         title: CustomText(text: recipe.title.capitalizeFirst!),
         actions: [
           IconButton(
-            onPressed: (){},
-            icon: Icon(Icons.favorite),
+            onPressed: () async {
+              await recipeToFavorite(recipe: recipe);
+              await appController.setRecipeFavorite(recipe: recipe);
+            },
+            icon: Obx(() => Icon(appController.isRecipeFavorite.value ? Icons.favorite : Icons.favorite_border)),
           )
         ],
         backgroundColor: color,

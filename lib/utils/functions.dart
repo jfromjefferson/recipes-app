@@ -8,6 +8,7 @@ import 'package:recipes/database/models/category/category.dart';
 import 'package:recipes/database/models/recipe/recipe.dart';
 import 'package:recipes/database/queries/category/queries.dart';
 import 'package:recipes/database/queries/recipe/queries.dart';
+import 'package:recipes/screens/recipe_by_category_screen.dart';
 import 'package:recipes/screens/recipe_screen.dart';
 import 'package:recipes/services/requests.dart';
 import 'package:recipes/utils/colors.dart';
@@ -27,7 +28,9 @@ Future<List<Widget>> categoryCardList() async {
         : primaryColor;
 
     categoryWidgetList.add(GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Get.to(() => RecipeByCategoryScreen(category: categoryTemp), transition: Transition.cupertino);
+      },
       child: Container(
           width: Get.mediaQuery.size.width / 2.2,
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
@@ -69,12 +72,21 @@ Future<List<Widget>> categoryCardList() async {
   return categoryWidgetList;
 }
 
-Future<List<Widget>> recipeCardList() async {
-  List<Recipe> recipeList = await getRecipeList();
+Future<List<Widget>> recipeCardList({Category? category}) async {
+  List<Recipe> recipeList = [];
+  int recipeLength = 10;
+
+  if(category == null){
+    recipeList = await getRecipeList();
+  }else {
+    recipeList = await getRecipeByCategory(category: category);
+    recipeLength = recipeList.length;
+  }
+
   List<Widget> recipeWidgetList = [];
 
   recipeList.shuffle();
-  recipeList.getRange(0, 10).forEach((recipeTemp) {
+  recipeList.getRange(0, recipeLength).forEach((recipeTemp) {
     Color cardColor =
         Colors.primaries[Random().nextInt(Colors.primaries.length)];
     Color textColor = Color(cardColor.value).computeLuminance() > 0.5
