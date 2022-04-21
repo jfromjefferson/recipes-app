@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:recipes/controllers/app_controller.dart';
 import 'package:recipes/database/models/category/category.dart';
+import 'package:recipes/database/models/favorite/favorite.dart';
 import 'package:recipes/database/models/recipe/recipe.dart';
 import 'package:recipes/database/queries/category/queries.dart';
 import 'package:recipes/database/queries/recipe/queries.dart';
@@ -72,14 +73,19 @@ Future<List<Widget>> categoryCardList() async {
   return categoryWidgetList;
 }
 
-Future<List<Widget>> recipeCardList({Category? category}) async {
+Future<List<Widget>> recipeCardList({Category? category, Favorite? favorite}) async {
   List<Recipe> recipeList = [];
   int recipeLength = 10;
 
-  if(category == null){
-    recipeList = await getRecipeList();
+  if(favorite == null){
+    if(category == null){
+      recipeList = await getRecipeList();
+    }else {
+      recipeList = await getRecipeByCategory(category: category);
+      recipeLength = recipeList.length;
+    }
   }else {
-    recipeList = await getRecipeByCategory(category: category);
+    recipeList = favorite.recipeList;
     recipeLength = recipeList.length;
   }
 
@@ -245,4 +251,36 @@ Widget formatItems(
   );
 
   return column;
+}
+
+Future<List<Widget>> getDrawerItemList() async {
+  List<Category> categoryList = await getCategoryList();
+  List<Widget> categoryWidgetList = [];
+
+  categoryList.forEach((category) {
+    categoryWidgetList.add(
+      Column(
+        children: [
+          GestureDetector(
+            onTap: (){
+              Get.to(() => RecipeByCategoryScreen(category: category), transition: Transition.cupertino);
+            },
+            child: Container(
+              child: ListTile(
+                leading: SvgPicture.network(category.iconSrc, width: 30),
+                title: CustomText(text: category.title),
+                trailing: Icon(Icons.arrow_forward_outlined),
+              ),
+            ),
+          ),
+          Divider(
+            height: 15,
+            color: Colors.grey,
+          )
+        ],
+      )
+    );
+  });
+
+  return categoryWidgetList;
 }

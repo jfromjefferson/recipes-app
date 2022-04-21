@@ -29,8 +29,13 @@ Future<void> recipeToFavorite({required Recipe recipe}) async {
 
   if(favorite != null){
     List<Recipe> recipeList = favorite.recipeList;
+    List<String> uuidList = [];
 
-    if(recipeList.contains(recipe)){
+    recipeList.forEach((element) {
+      uuidList.add(element.uuid);
+    });
+
+    if(uuidList.contains(recipe.uuid)){
       recipeList.remove(recipe);
     }else {
       recipeList.add(recipe);

@@ -16,42 +16,49 @@ class RecipeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    appController.setRecipeFavorite(recipe: recipe);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: CustomText(text: recipe.title.capitalizeFirst!),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await recipeToFavorite(recipe: recipe);
-              await appController.setRecipeFavorite(recipe: recipe);
-            },
-            icon: Obx(() => Icon(appController.isRecipeFavorite.value ? Icons.favorite : Icons.favorite_border)),
-          )
-        ],
-        backgroundColor: color,
-      ),
-      body: Container(
-        color: Colors.white,
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-        child: ListView(
-          children: [
-            CustomText(text: recipe.title, size: 28, align: TextAlign.center),
-            CustomText(text: 'Serve ${recipe.serve}', size: 20, align: TextAlign.center),
-            Divider(
-              height: 15,
-              color: color,
+    return FutureBuilder(
+      future: appController.setRecipeFavorite(recipe: recipe),
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        if(snapshot.hasData){
+          return Scaffold(
+            appBar: AppBar(
+              title: CustomText(text: recipe.title.capitalizeFirst!),
+              actions: [
+                IconButton(
+                  onPressed: () async {
+                    await recipeToFavorite(recipe: recipe);
+                    await appController.setRecipeFavorite(recipe: recipe);
+                  },
+                  icon: Obx(() => Icon(appController.isRecipeFavorite.value ? Icons.favorite : Icons.favorite_border)),
+                )
+              ],
+              backgroundColor: color,
             ),
-            CustomText(text: 'Ingredientes', size: 18, align: TextAlign.center),
-            SizedBox(height: 15),
-            formatItems(itemList: recipe.ingredientList, appController: appController, color: color),
-            CustomText(text: 'Modo de preparo', size: 18, align: TextAlign.center),
-            SizedBox(height: 15),
-            formatItems(itemList: recipe.instructions, appController: appController, color: color),
-          ],
-        ),
-      ),
+            body: Container(
+              color: Colors.white,
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+              child: ListView(
+                children: [
+                  CustomText(text: recipe.title, size: 28, align: TextAlign.center),
+                  CustomText(text: 'Serve ${recipe.serve}', size: 20, align: TextAlign.center),
+                  Divider(
+                    height: 15,
+                    color: color,
+                  ),
+                  CustomText(text: 'Ingredientes', size: 18, align: TextAlign.center),
+                  SizedBox(height: 15),
+                  formatItems(itemList: recipe.ingredientList, appController: appController, color: color),
+                  CustomText(text: 'Modo de preparo', size: 18, align: TextAlign.center),
+                  SizedBox(height: 15),
+                  formatItems(itemList: recipe.instructions, appController: appController, color: color),
+                ],
+              ),
+            ),
+          );
+        }else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }

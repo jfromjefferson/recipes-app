@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:recipes/controllers/app_controller.dart';
 import 'package:recipes/database/queries/category/queries.dart';
 import 'package:recipes/database/queries/recipe/queries.dart';
+import 'package:recipes/screens/favorire_recipe_screen.dart';
 import 'package:recipes/utils/colors.dart';
 import 'package:recipes/utils/functions.dart';
 import 'package:recipes/widgets/customText.dart';
@@ -21,6 +22,41 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        backgroundColor: primaryColor,
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: Center(child: CustomText(text: 'Receitas', size: 19)),
+            ),
+            GestureDetector(
+              onTap: (){
+                Get.to(() => FavoriteRecipeScreen(favorite: appController.favoriteObject), transition: Transition.cupertino);
+              },
+              child: Container(
+                child: ListTile(
+                  leading: Icon(Icons.favorite, size: 30),
+                  title: CustomText(text: 'Receitas salvas'),
+                  trailing: Icon(Icons.arrow_forward_outlined),
+                ),
+              ),
+            ),
+            SizedBox(height: 15),
+            CustomText(text: 'Todas as categorias', align: TextAlign.center, size: 17),
+            SizedBox(height: 15),
+            FutureBuilder(
+              future: getDrawerItemList(),
+              builder: (BuildContext context, AsyncSnapshot snapshot){
+                if(snapshot.hasData){
+                  return Column(children: snapshot.data);
+                }else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+          ],
+        ),
+      ),
       body: SafeArea(
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
