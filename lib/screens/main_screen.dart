@@ -5,6 +5,7 @@ import 'package:recipes/controllers/app_controller.dart';
 import 'package:recipes/database/queries/category/queries.dart';
 import 'package:recipes/database/queries/recipe/queries.dart';
 import 'package:recipes/screens/favorire_recipe_screen.dart';
+import 'package:recipes/screens/recipe_by_search_screen.dart';
 import 'package:recipes/utils/colors.dart';
 import 'package:recipes/utils/functions.dart';
 import 'package:recipes/widgets/customText.dart';
@@ -61,19 +62,26 @@ class _MainScreenState extends State<MainScreen> {
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: (){
-            getRecipeList().then((value) {
-              print(value);
-            });
             Get.focusScope?.unfocus();
           },
           child: Container(
-            padding: EdgeInsets.only(left: 10, right: 10, top: 5),
+            padding: EdgeInsets.only(left: 5, right: 5, top: 10),
             child: Column(
               children: [
                 CustomTextField(
-                  onChanged: (String value){},
+                  onChanged: (String value) async {
+                    appController.searchRecipe(recipeTitle: value);
+                  },
                   onPressed: (){
-                    print('oii');
+                    print(appController.recipeSearched);
+                    if(appController.recipeSearched?.trim() != ''){
+                      Get.to(() => RecipeBySearchScreen(recipeTitle: appController.recipeSearched!), transition: Transition.cupertino);
+                    }
+                  },
+                  onSubmitted: (String value){
+                    if(value.trim() != ''){
+                      Get.to(() => RecipeBySearchScreen(recipeTitle: appController.recipeSearched!), transition: Transition.cupertino);
+                    }
                   },
                   hintText: 'Procurar receita',
                   fillColor: Colors.white,

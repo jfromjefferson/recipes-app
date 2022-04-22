@@ -73,20 +73,25 @@ Future<List<Widget>> categoryCardList() async {
   return categoryWidgetList;
 }
 
-Future<List<Widget>> recipeCardList({Category? category, Favorite? favorite}) async {
+Future<List<Widget>> recipeCardList({Category? category, Favorite? favorite, List<Recipe>? searchedRecipes}) async {
   List<Recipe> recipeList = [];
   int recipeLength = 10;
 
-  if(favorite == null){
-    if(category == null){
-      recipeList = await getRecipeList();
+  if(searchedRecipes == null){
+    if(favorite == null){
+      if(category == null){
+        recipeList = await getRecipeList();
+      }else {
+        recipeList = await getRecipeByCategory(category: category);
+        recipeLength = recipeList.length;
+      }
     }else {
-      recipeList = await getRecipeByCategory(category: category);
-      recipeLength = recipeList.length;
+      recipeList = favorite.recipeList;
+      recipeLength = favorite.recipeList.length;
     }
   }else {
-    recipeList = favorite.recipeList;
-    recipeLength = recipeList.length;
+    recipeList = searchedRecipes;
+    recipeLength = searchedRecipes.length;
   }
 
   List<Widget> recipeWidgetList = [];
@@ -129,7 +134,7 @@ Future<List<Widget>> recipeCardList({Category? category, Favorite? favorite}) as
                   color: textColor),
               SizedBox(height: 10),
               CustomText(
-                  text: '${recipeTemp.likes} pessoas gostaram disso',
+                  text: '${recipeTemp.likes} pessoas gostaram dessa receita',
                   align: TextAlign.center,
                   color: textColor),
             ],

@@ -21,6 +21,7 @@ class CustomTextField extends StatelessWidget {
   final textCapitalization;
   final FontWeight? weight;
   final double? borderRadius;
+  final Function(String)? onSubmitted;
 
   CustomTextField({
     this.size,
@@ -42,11 +43,13 @@ class CustomTextField extends StatelessWidget {
     this.textCapitalization,
     this.weight,
     this.borderRadius,
+    this.onSubmitted,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onSubmitted: onSubmitted,
       obscureText: obscureText,
       autofocus: autoFocus,
       readOnly: readOnly,

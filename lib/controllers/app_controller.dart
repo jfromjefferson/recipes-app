@@ -1,11 +1,14 @@
 import 'package:get/get.dart';
 import 'package:recipes/database/models/recipe/recipe.dart';
 import 'package:recipes/database/queries/favorite/queries.dart';
+import 'package:recipes/database/queries/recipe/queries.dart';
 
 class AppController extends GetxController {
   var itemToCheckMap = {}.obs;
   var isRecipeFavorite = false.obs;
   var favoriteObject;
+  var searchedRecipes = [].obs;
+  String? recipeSearched;
 
   @override
   void onInit() async {
@@ -35,6 +38,13 @@ class AppController extends GetxController {
     }
 
     return isRecipeFavorite.value;
+  }
+
+  Future<void> searchRecipe({required String recipeTitle}) async {
+    List<Recipe> recipeList = await getRecipeBySearch(recipeTitle: recipeTitle);
+
+    searchedRecipes.value = recipeList;
+    recipeSearched = recipeTitle;
   }
 
 }
