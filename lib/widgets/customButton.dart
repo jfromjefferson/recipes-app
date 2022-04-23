@@ -9,13 +9,13 @@ class CustomButton extends StatelessWidget {
   final double ?textSize;
   final Color ?buttonColor;
   final Color ?textColor;
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   CustomButton({
     required this.onPressed,
     required this.text,
-    required this.padding,
-    this.textSize = 20,
+    this.padding = const EdgeInsets.symmetric(vertical: 10),
+    this.textSize = 18,
     this.buttonColor = primaryColor,
     this.textColor = Colors.white
   });

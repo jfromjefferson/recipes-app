@@ -44,11 +44,17 @@ Future<List<Recipe>> getRecipeByCategory({required Category category}) async {
   return recipeList;
 }
 
-Future<List<Recipe>> getRecipeBySearch({required String recipeTitle}) async {
+Future<List<Recipe>> getRecipeBySearch({required String recipeTitle, Category? category}) async {
   final box = await Hive.openBox<Recipe>('recipe');
   List<Recipe> recipeList = [];
-  
-  final filteredList = box.values.where((recipeTemp) => recipeTemp.title.toLowerCase().contains(recipeTitle.toLowerCase())).toList();
+
+  var filteredList;
+
+  if(category != null){
+    filteredList = box.values.where((recipeTemp) => recipeTemp.title.toLowerCase().contains(recipeTitle.toLowerCase()) && recipeTemp.category.uuid == category.uuid).toList();
+  }else {
+    filteredList = box.values.where((recipeTemp) => recipeTemp.title.toLowerCase().contains(recipeTitle.toLowerCase())).toList();
+  }
 
   filteredList.forEach((recipeTemp) {
     recipeList.add(recipeTemp);

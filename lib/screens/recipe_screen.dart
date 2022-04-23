@@ -5,6 +5,7 @@ import 'package:recipes/database/models/recipe/recipe.dart';
 import 'package:recipes/database/queries/favorite/queries.dart';
 import 'package:recipes/utils/functions.dart';
 import 'package:recipes/widgets/customText.dart';
+import 'package:recipes/widgets/custom_ads.dart';
 
 class RecipeScreen extends StatelessWidget {
   final AppController appController = Get.put(AppController());
@@ -45,10 +46,16 @@ class RecipeScreen extends StatelessWidget {
                     height: 15,
                     color: color,
                   ),
+                  SizedBox(height: 10),
+                  BannerAds(),
+                  SizedBox(height: 10),
                   CustomText(text: 'Ingredientes', size: 18, align: TextAlign.center),
                   SizedBox(height: 15),
                   formatItems(itemList: recipe.ingredientList, appController: appController, color: color),
+                  SizedBox(height: 15),
                   CustomText(text: 'Modo de preparo', size: 18, align: TextAlign.center),
+                  SizedBox(height: 10),
+                  BannerAds(),
                   SizedBox(height: 15),
                   formatItems(itemList: recipe.instructions, appController: appController, color: color),
                 ],

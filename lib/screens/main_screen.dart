@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:recipes/controllers/app_controller.dart';
 import 'package:recipes/database/queries/category/queries.dart';
 import 'package:recipes/database/queries/recipe/queries.dart';
@@ -8,9 +9,11 @@ import 'package:recipes/screens/favorire_recipe_screen.dart';
 import 'package:recipes/screens/recipe_by_search_screen.dart';
 import 'package:recipes/utils/colors.dart';
 import 'package:recipes/utils/functions.dart';
+import 'package:recipes/widgets/customButton.dart';
 import 'package:recipes/widgets/customText.dart';
 import 'package:recipes/widgets/customTextField.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:recipes/widgets/custom_ads.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -23,6 +26,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: appController.scaffoldKey,
       drawer: Drawer(
         backgroundColor: primaryColor,
         child: ListView(
@@ -106,6 +110,7 @@ class _MainScreenState extends State<MainScreen> {
                           weight: FontWeight.bold,
                           color: textColor,
                         ),
+                        BannerAds(),
                         SizedBox(height: 10),
                         FutureBuilder(
                           future: categoryCardList(),
@@ -122,7 +127,15 @@ class _MainScreenState extends State<MainScreen> {
                             }
                           },
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 30),
+                        CustomButton(
+                          onPressed: (){
+                            appController.openDrawer();
+                          },
+                          text: 'Todas as categorias',
+                          buttonColor: Colors.blue,
+                        ),
+                        SizedBox(height: 30),
                         CustomText(
                           text: 'Últimas receitas',
                           size: 20,

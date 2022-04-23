@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:recipes/database/queries/favorite/queries.dart';
 import 'package:recipes/screens/main_screen.dart';
@@ -10,6 +11,8 @@ import 'package:recipes/utils/register_adapter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  MobileAds.instance.initialize();
 
   await Hive.initFlutter();
   registerAdapter();

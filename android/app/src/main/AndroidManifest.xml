@@ -4,6 +4,11 @@
         android:label="recipes"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+       <meta-data
+           android:name="com.google.android.gms.ads.APPLICATION_ID"
+           android:value="ca-app-pub-9994004463953740~6490805127"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

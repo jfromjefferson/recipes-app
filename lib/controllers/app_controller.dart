@@ -1,13 +1,21 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:recipes/database/models/category/category.dart';
 import 'package:recipes/database/models/recipe/recipe.dart';
 import 'package:recipes/database/queries/favorite/queries.dart';
 import 'package:recipes/database/queries/recipe/queries.dart';
+import 'package:recipes/utils/ads_keys.dart';
 
 class AppController extends GetxController {
   var itemToCheckMap = {}.obs;
   var isRecipeFavorite = false.obs;
   var favoriteObject;
   var searchedRecipes = [].obs;
+  var showSearchField = false.obs;
+
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+
   String? recipeSearched;
 
   @override
@@ -15,6 +23,10 @@ class AppController extends GetxController {
     favoriteObject = await getFavoriteObject();
 
     super.onInit();
+  }
+
+  void openDrawer() {
+    scaffoldKey.currentState?.openDrawer();
   }
 
   void checkItem({required String element}) {
@@ -40,11 +52,15 @@ class AppController extends GetxController {
     return isRecipeFavorite.value;
   }
 
-  Future<void> searchRecipe({required String recipeTitle}) async {
-    List<Recipe> recipeList = await getRecipeBySearch(recipeTitle: recipeTitle);
+  Future<void> searchRecipe({required String recipeTitle, Category? category}) async {
+    List<Recipe> recipeList = await getRecipeBySearch(recipeTitle: recipeTitle, category: category);
 
     searchedRecipes.value = recipeList;
     recipeSearched = recipeTitle;
+  }
+
+  void toggleSearchFieldVisibility() {
+    showSearchField.value = !showSearchField.value;
   }
 
 }
