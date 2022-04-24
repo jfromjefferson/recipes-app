@@ -5,3 +5,4 @@ hive type ids
 category - 0
 recipe - 1
 favorite - 2
+settings - 3

@@ -1,13 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.oitobits.recipes.recipes">
    <application
-        android:label="recipes"
+        android:label="Receitas"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
        <meta-data
            android:name="com.google.android.gms.ads.APPLICATION_ID"
-           android:value="ca-app-pub-9994004463953740~6490805127"/>
+           android:value="ca-app-pub-9994004463953740~2138528236"/>
 
         <activity
             android:name=".MainActivity"

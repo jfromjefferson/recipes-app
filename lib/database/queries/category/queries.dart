@@ -34,3 +34,9 @@ Future<void> saveCategory({required Category category}) async {
     await box.add(category);
   }
 }
+
+Future<void> removeAllCategories() async {
+  final box = await Hive.openBox<Category>('category');
+
+  await box.clear();
+}

@@ -19,7 +19,6 @@ class CustomAds extends StatelessWidget {
       future: loading(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(snapshot.hasData){
-          //return Text('AAAAAAAAAAAAAAAAAAAAAAAAA');
           return AdmobBanner(
             adSize: size,
             adUnitId: AdsKeys().getBannerId(),

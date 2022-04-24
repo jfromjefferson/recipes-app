@@ -19,8 +19,6 @@ Future<void> saveRecipe({required Recipe recipe}) async {
 Future<List<Recipe>> getRecipeList() async {
   final box = await Hive.openBox<Recipe>('recipe');
 
-  // box.clear();
-
   List<Recipe> recipeList = [];
 
   box.toMap().forEach((key, recipe) {
@@ -61,4 +59,10 @@ Future<List<Recipe>> getRecipeBySearch({required String recipeTitle, Category? c
   });
 
   return recipeList;
+}
+
+Future<void> removeAllRecipes() async {
+  final box = await Hive.openBox<Recipe>('recipe');
+
+  await box.clear();
 }
