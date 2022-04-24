@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:recipes/database/models/category/category.dart';
 import 'package:recipes/database/models/recipe/recipe.dart';
 import 'package:recipes/database/queries/favorite/queries.dart';
 import 'package:recipes/database/queries/recipe/queries.dart';
-import 'package:recipes/utils/ads_keys.dart';
 
 class AppController extends GetxController {
   var itemToCheckMap = {}.obs;

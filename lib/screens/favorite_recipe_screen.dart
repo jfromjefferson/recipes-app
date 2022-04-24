@@ -1,8 +1,10 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:recipes/database/models/favorite/favorite.dart';
 import 'package:recipes/utils/functions.dart';
 import 'package:recipes/widgets/customText.dart';
+import 'package:recipes/widgets/custom_ads.dart';
 
 class FavoriteRecipeScreen extends StatefulWidget {
   final Favorite favorite;
@@ -35,6 +37,8 @@ class _FavoriteRecipeScreenState extends State<FavoriteRecipeScreen> {
                   },
                   child: ListView(
                     children: [
+                      CustomAds(size: AdmobBannerSize.FULL_BANNER),
+                      SizedBox(height: 10),
                       StaggeredGrid.count(
                         crossAxisCount: 2,
                         crossAxisSpacing: 10,
@@ -46,7 +50,14 @@ class _FavoriteRecipeScreenState extends State<FavoriteRecipeScreen> {
                 );
               }else {
                 return Center(
-                  child: CustomText(text: 'Nenhuma receita salva :(', size: 19, weight: FontWeight.bold),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomText(text: 'Nenhuma receita salva :(', size: 19, weight: FontWeight.bold),
+                      SizedBox(height: 10),
+                      CustomAds(size: AdmobBannerSize.LARGE_BANNER)
+                    ],
+                  ),
                 );
               }
             }else {

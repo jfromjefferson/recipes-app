@@ -9,4 +9,9 @@ class AdsKeys {
     // return 'ca-app-pub-9994004463953740/8340935236'; // Release
   }
 
+  String getInterstitial(){
+    return 'ca-app-pub-3940256099942544/8691691433'; // test
+    // return 'ca-app-pub-9994004463953740/8340935236'; // Release
+  }
+
 }

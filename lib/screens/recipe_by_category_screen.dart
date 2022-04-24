@@ -1,3 +1,4 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
@@ -75,7 +76,7 @@ class _RecipeByCategoryScreenState extends State<RecipeByCategoryScreen> {
                         : SizedBox()
                       ),
                       SizedBox(height: 10),
-                      BannerAds(),
+                      CustomAds(size: AdmobBannerSize.FULL_BANNER),
                       appController.searchedRecipes.value.length == 0 && appController.recipeSearched?.trim() != null && appController.recipeSearched?.trim() != ''
                           ? Column(
                             children: [
@@ -103,7 +104,7 @@ class _RecipeByCategoryScreenState extends State<RecipeByCategoryScreen> {
                     children: [
                       CustomText(text: 'Nenhuma receita encontrada :(', weight: FontWeight.bold, size: 18),
                       SizedBox(height: 20),
-                      LargerBanner()
+                      CustomAds(size: AdmobBannerSize.LARGE_BANNER)
                     ],
                   ),
                 );

@@ -1,11 +1,8 @@
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:recipes/controllers/app_controller.dart';
-import 'package:recipes/database/queries/category/queries.dart';
-import 'package:recipes/database/queries/recipe/queries.dart';
-import 'package:recipes/screens/favorire_recipe_screen.dart';
+import 'package:recipes/screens/favorite_recipe_screen.dart';
 import 'package:recipes/screens/recipe_by_search_screen.dart';
 import 'package:recipes/utils/colors.dart';
 import 'package:recipes/utils/functions.dart';
@@ -77,13 +74,12 @@ class _MainScreenState extends State<MainScreen> {
                     appController.searchRecipe(recipeTitle: value);
                   },
                   onPressed: (){
-                    print(appController.recipeSearched);
-                    if(appController.recipeSearched?.trim() != ''){
+                    if(appController.recipeSearched?.trim() != '' && appController.recipeSearched != null){
                       Get.to(() => RecipeBySearchScreen(recipeTitle: appController.recipeSearched!), transition: Transition.cupertino);
                     }
                   },
                   onSubmitted: (String value){
-                    if(value.trim() != ''){
+                    if(value.trim() != '' && appController.recipeSearched != null){
                       Get.to(() => RecipeBySearchScreen(recipeTitle: appController.recipeSearched!), transition: Transition.cupertino);
                     }
                   },
@@ -110,7 +106,7 @@ class _MainScreenState extends State<MainScreen> {
                           weight: FontWeight.bold,
                           color: textColor,
                         ),
-                        BannerAds(),
+                        CustomAds(size: AdmobBannerSize.FULL_BANNER),
                         SizedBox(height: 10),
                         FutureBuilder(
                           future: categoryCardList(),
@@ -159,6 +155,8 @@ class _MainScreenState extends State<MainScreen> {
                             }
                           },
                         ),
+                        SizedBox(height: 10),
+                        CustomAds(size: AdmobBannerSize.LARGE_BANNER),
                         SizedBox(height: 10),
                       ],
                     ),

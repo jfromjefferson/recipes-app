@@ -36,7 +36,7 @@ Future<void> recipeToFavorite({required Recipe recipe}) async {
     });
 
     if(uuidList.contains(recipe.uuid)){
-      recipeList.remove(recipe);
+      recipeList.removeWhere((element) => element.uuid == recipe.uuid);
     }else {
       recipeList.add(recipe);
     }
