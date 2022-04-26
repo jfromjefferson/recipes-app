@@ -21,7 +21,7 @@ class RecipeAdapter extends TypeAdapter<Recipe> {
       title: fields[0] as String,
       ingredientList: (fields[2] as List).cast<String>(),
       instructions: (fields[3] as List).cast<String>(),
-      likes: fields[4] as int,
+      likes: fields[4] as String,
       serve: fields[1] as String,
       category: fields[6] as Category,
     );

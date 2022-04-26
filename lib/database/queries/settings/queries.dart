@@ -7,7 +7,7 @@ Future<void> createSettingsObject() async {
 
   getSettingsObject().then((value) async {
     if(value == null){
-      Settings settings = Settings(lastSync: DateTime.now());
+      Settings settings = Settings(lastSync: DateTime.now(), showAds: true);
 
       await box.add(settings);
     }
@@ -28,7 +28,7 @@ Future<bool> refreshCachedData() async {
 
   if(settings == null){
     return true;
-  }else if(settings.lastSync.isAfter(DateTime.now().add(Duration(days: 7)))){
+  }else if(settings.lastSync.isBefore(DateTime.now())){
     return true;
   }
 

@@ -17,7 +17,7 @@ class Recipe extends HiveObject {
   late List<String> instructions;
 
   @HiveField(4)
-  late int likes;
+  late String likes;
 
   @HiveField(5)
   late String uuid;

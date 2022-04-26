@@ -18,15 +18,18 @@ class SettingsAdapter extends TypeAdapter<Settings> {
     };
     return Settings(
       lastSync: fields[0] as DateTime,
+      showAds: fields[1] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Settings obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.lastSync);
+      ..write(obj.lastSync)
+      ..writeByte(1)
+      ..write(obj.showAds);
   }
 
   @override
