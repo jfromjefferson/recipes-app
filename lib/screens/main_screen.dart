@@ -2,6 +2,7 @@ import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipes/controllers/app_controller.dart';
+import 'package:recipes/database/models/settings/settings.dart';
 import 'package:recipes/screens/favorite_recipe_screen.dart';
 import 'package:recipes/screens/recipe_by_search_screen.dart';
 import 'package:recipes/utils/colors.dart';
@@ -11,6 +12,8 @@ import 'package:recipes/widgets/customText.dart';
 import 'package:recipes/widgets/customTextField.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:recipes/widgets/custom_ads.dart';
+
+import '../database/queries/settings/queries.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -56,6 +59,23 @@ class _MainScreenState extends State<MainScreen> {
                 }
               },
             ),
+            GestureDetector(
+              onLongPress: () async {
+                Settings? settings = await getSettingsObject();
+
+                if(settings != null){
+                  settings.showAds = !settings.showAds;
+
+                  settings.save();
+
+                  // print(settings.toMap());
+                }
+              },
+              child: CustomText(
+                text: '-------------------',
+                color: primaryColor,
+              ),
+            )
           ],
         ),
       ),

@@ -9,6 +9,9 @@ import 'package:recipes/utils/functions.dart';
 import 'package:recipes/widgets/customText.dart';
 import 'package:recipes/widgets/custom_ads.dart';
 
+import '../database/models/settings/settings.dart';
+import '../database/queries/settings/queries.dart';
+
 class RecipeScreen extends StatefulWidget {
   final Recipe recipe;
   final Color color;
@@ -55,11 +58,15 @@ class _RecipeScreenState extends State<RecipeScreen> {
                     await recipeToFavorite(recipe: widget.recipe);
                     await appController.setRecipeFavorite(recipe: widget.recipe);
 
+                    Settings? settings = await getSettingsObject();
+
                     bool? isLoaded = await interstitialAd.isLoaded;
 
                     if(isLoaded ?? false){
                       if(appController.isRecipeFavorite.value){
-                        interstitialAd.show();
+                        if(settings!.showAds){
+                          interstitialAd.show();
+                        }
                       }
                     }
 

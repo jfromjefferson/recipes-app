@@ -1,6 +1,9 @@
 -- Generate model.g.dart
 flutter packages pub run build_runner build --delete-conflicting-outputs
 
+-- Generate splash screen
+flutter pub run flutter_native_splash:create
+
 hive type ids
 category - 0
 recipe - 1
