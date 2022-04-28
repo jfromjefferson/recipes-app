@@ -42,6 +42,7 @@ class _CustomAdsState extends State<CustomAds> {
       future: loading(),
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if(snapshot.hasData && showAds){
+          // return Text('AAAAAAAAAAAAAAAAAAAAAAAAA');
           return AdmobBanner(
             adSize: widget.size,
             adUnitId: AdsKeys().getBannerId(),
