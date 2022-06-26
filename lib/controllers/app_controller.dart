@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipes/database/models/category/category.dart';
 import 'package:recipes/database/models/recipe/recipe.dart';
+import 'package:recipes/database/models/settings/settings.dart';
+import 'package:recipes/database/queries/category/queries.dart';
 import 'package:recipes/database/queries/favorite/queries.dart';
 import 'package:recipes/database/queries/recipe/queries.dart';
+import 'package:recipes/database/queries/settings/queries.dart';
+import 'package:recipes/utils/functions.dart';
 
 class AppController extends GetxController {
   var itemToCheckMap = {}.obs;
@@ -19,6 +23,27 @@ class AppController extends GetxController {
   @override
   void onInit() async {
     favoriteObject = await getFavoriteObject();
+
+    bool refreshCache = await refreshCachedData();
+
+    if(refreshCache){
+      print('refresh');
+      await removeAllCategories();
+      await removeAllRecipes();
+
+      await createCategoryCache();
+      await createRecipeCache();
+
+      Settings? settings = await getSettingsObject();
+
+      if(settings != null){
+        settings.lastSync = DateTime.now().add(Duration(days: 7));
+
+        settings.save();
+      }
+    }else{
+      print('not refresh');
+    }
 
     super.onInit();
   }

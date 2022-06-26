@@ -3,14 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:recipes/database/models/settings/settings.dart';
-import 'package:recipes/database/queries/category/queries.dart';
 import 'package:recipes/database/queries/favorite/queries.dart';
-import 'package:recipes/database/queries/recipe/queries.dart';
 import 'package:recipes/database/queries/settings/queries.dart';
 import 'package:recipes/screens/main_screen.dart';
 import 'package:recipes/utils/colors.dart';
-import 'package:recipes/utils/functions.dart';
 import 'package:recipes/utils/register_adapter.dart';
 
 Future<void> main() async {
@@ -22,31 +18,8 @@ Future<void> main() async {
   registerAdapter();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  // Cache
   await createSettingsObject();
   await createFavoriteObject();
-
-  bool refreshCache = await refreshCachedData();
-
-  if(refreshCache){
-    print('refresh');
-    await removeAllCategories();
-    await removeAllRecipes();
-
-    await createCategoryCache();
-    await createRecipeCache();
-
-    Settings? settings = await getSettingsObject();
-
-    if(settings != null){
-      settings.lastSync = DateTime.now().add(Duration(days: 7));
-
-      settings.save();
-    }
-  }else{
-    print('not refresh');
-  }
-  // Cache
 
   runApp(const MyApp());
 }

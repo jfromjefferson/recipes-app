@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:recipes/controllers/app_controller.dart';
 import 'package:recipes/database/models/settings/settings.dart';
+import 'package:recipes/database/queries/category/queries.dart';
+import 'package:recipes/database/queries/recipe/queries.dart';
+import 'package:recipes/database/queries/settings/queries.dart';
 import 'package:recipes/screens/favorite_recipe_screen.dart';
 import 'package:recipes/screens/recipe_by_search_screen.dart';
 import 'package:recipes/utils/colors.dart';
@@ -13,8 +18,6 @@ import 'package:recipes/widgets/customTextField.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:recipes/widgets/custom_ads.dart';
 
-import '../database/queries/settings/queries.dart';
-
 class MainScreen extends StatefulWidget {
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -22,6 +25,30 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final AppController appController = Get.put(AppController());
+
+  @override
+  void initState() {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      getCategoryList().then((value) {
+        if (value.length > 0) {
+          setState(() {
+            timer.cancel();
+          });
+        }
+      });
+    });
+
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      getRecipeList().then((value) {
+        if (value.length > 0) {
+          setState(() {
+            timer.cancel();
+          });
+        }
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +59,29 @@ class _MainScreenState extends State<MainScreen> {
         child: ListView(
           children: [
             DrawerHeader(
-              child: Center(child: CustomText(text: 'Receitas', size: 19)),
+              child: Center(
+                child: GestureDetector(
+                  onLongPress: () async {
+                    Settings? settings = await getSettingsObject();
+
+                    if (settings != null) {
+                      settings.showAds = !settings.showAds;
+
+                      settings.save();
+
+                      // print(settings.toMap());
+                    }
+                  },
+                  child: CustomText(text: 'Receitas', size: 19),
+                ),
+              ),
             ),
             GestureDetector(
-              onTap: (){
-                Get.to(() => FavoriteRecipeScreen(favorite: appController.favoriteObject), transition: Transition.cupertino);
+              onTap: () {
+                Get.to(
+                    () => FavoriteRecipeScreen(
+                        favorite: appController.favoriteObject),
+                    transition: Transition.cupertino);
               },
               child: Container(
                 child: ListTile(
@@ -47,14 +92,15 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
             SizedBox(height: 15),
-            CustomText(text: 'Todas as categorias', align: TextAlign.center, size: 17),
+            CustomText(
+                text: 'Todas as categorias', align: TextAlign.center, size: 17),
             SizedBox(height: 15),
             FutureBuilder(
               future: getDrawerItemList(),
-              builder: (BuildContext context, AsyncSnapshot snapshot){
-                if(snapshot.hasData){
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
                   return Column(children: snapshot.data);
-                }else {
+                } else {
                   return Center(child: CircularProgressIndicator());
                 }
               },
@@ -63,7 +109,7 @@ class _MainScreenState extends State<MainScreen> {
               onLongPress: () async {
                 Settings? settings = await getSettingsObject();
 
-                if(settings != null){
+                if (settings != null) {
                   settings.showAds = !settings.showAds;
 
                   settings.save();
@@ -82,7 +128,7 @@ class _MainScreenState extends State<MainScreen> {
       body: SafeArea(
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
-          onTap: (){
+          onTap: () {
             Get.focusScope?.unfocus();
           },
           child: Container(
@@ -93,14 +139,22 @@ class _MainScreenState extends State<MainScreen> {
                   onChanged: (String value) async {
                     appController.searchRecipe(recipeTitle: value);
                   },
-                  onPressed: (){
-                    if(appController.recipeSearched?.trim() != '' && appController.recipeSearched != null){
-                      Get.to(() => RecipeBySearchScreen(recipeTitle: appController.recipeSearched!), transition: Transition.cupertino);
+                  onPressed: () {
+                    if (appController.recipeSearched?.trim() != '' &&
+                        appController.recipeSearched != null) {
+                      Get.to(
+                          () => RecipeBySearchScreen(
+                              recipeTitle: appController.recipeSearched!),
+                          transition: Transition.cupertino);
                     }
                   },
-                  onSubmitted: (String value){
-                    if(value.trim() != '' && appController.recipeSearched != null){
-                      Get.to(() => RecipeBySearchScreen(recipeTitle: appController.recipeSearched!), transition: Transition.cupertino);
+                  onSubmitted: (String value) {
+                    if (value.trim() != '' &&
+                        appController.recipeSearched != null) {
+                      Get.to(
+                          () => RecipeBySearchScreen(
+                              recipeTitle: appController.recipeSearched!),
+                          transition: Transition.cupertino);
                     }
                   },
                   hintText: 'Procurar receita',
@@ -112,7 +166,7 @@ class _MainScreenState extends State<MainScreen> {
                 SizedBox(height: 10),
                 Expanded(
                   child: RefreshIndicator(
-                    onRefresh: (){
+                    onRefresh: () {
                       return Future.delayed(Duration(seconds: 3)).then((value) {
                         setState(() {});
                       });
@@ -130,22 +184,23 @@ class _MainScreenState extends State<MainScreen> {
                         SizedBox(height: 10),
                         FutureBuilder(
                           future: categoryCardList(),
-                          builder: (BuildContext context, AsyncSnapshot snapshot){
-                            if(snapshot.hasData){
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            if (snapshot.hasData) {
                               return StaggeredGrid.count(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 10,
                                 mainAxisSpacing: 10,
                                 children: snapshot.data,
                               );
-                            }else {
+                            } else {
                               return Center(child: CircularProgressIndicator());
                             }
                           },
                         ),
                         SizedBox(height: 30),
                         CustomButton(
-                          onPressed: (){
+                          onPressed: () {
                             appController.openDrawer();
                           },
                           text: 'Todas as categorias',
@@ -162,15 +217,16 @@ class _MainScreenState extends State<MainScreen> {
                         SizedBox(height: 10),
                         FutureBuilder(
                           future: recipeCardList(),
-                          builder: (BuildContext context, AsyncSnapshot snapshot){
-                            if(snapshot.hasData){
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            if (snapshot.hasData) {
                               return StaggeredGrid.count(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 10,
                                 mainAxisSpacing: 10,
                                 children: snapshot.data,
                               );
-                            }else {
+                            } else {
                               return Center(child: CircularProgressIndicator());
                             }
                           },
