@@ -13,6 +13,6 @@
 - hive e hive_flutter - Banco de dados
 - flutter_svg - Renderizar svg
 - dio - Requisições
-- flutter_staggered_grid_view - Organizar os cards na tela com no +- 2 items por linha
+- flutter_staggered_grid_view - Organizar os cards na tela com +- 2 items por linha
 - admob_flutter - Anúncios
 - Dê uma conferida no <a href="https://play.google.com/store/apps/details?id=com.oitobits.recipes">google play</a>
